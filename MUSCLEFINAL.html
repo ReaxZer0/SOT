@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+
+    header{
+        margin: 0;
+        padding:0;
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 30px 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10000;
+    }
+    header .logo{
+        display:flex;
+        color: #fff;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 2em;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    header ul{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    header ul li{
+        list-style: none;
+        margin-left: 20px;
+    }
+    header ul li a{
+        text-decoration: noun;
+        padding: 6px 15px;
+        color: black;
+        border-radius: 20px;
+        font-family: 'Anta', sans-serif;
+    }
+    header ul li a:hover,header ul li a.active{
+        background-color: black;
+        color: #fff;
+    }
+    body{
+        padding-top: 300px;
+        background-image: url(MUSPIC/104.png);
+        background-position: center;
+        background-size: cover;
+    }
+    text{
+        text-decoration: none;
+    }
+    #ss{
+        background-color: black;
+        width: 400px;
+        height: 200px;
+        margin: 0;
+        padding: 0;
+    }
+    #hh{
+        background-color: aliceblue;
+        
+        position: absolute;
+        width: 100px;
+        height: 200px;
+
+    }
+    #vid{
+        background-position: center;
+        
+    }
+canvas{
+  padding-top: 0px;
+  padding-left: 300px;
+  
+}
+
+
+</style>
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Muscle Code</title>
+  <link rel="icon" href="MUSPIC/SOTT.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anta&display=swap" rel="stylesheet">
+  
+  <!-- Import mediapipe module-->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils_3d/control_utils_3d.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js" crossorigin="anonymous"></script>
+
+
+
+</head>
+
+<body>
+  <header>
+    <a href="#" class="logo"><img src="MUSPIC/SOT_kuro-removebg.png" width="30%" height="30%"></a>
+    <ul>
+        <li><a  style="text-decoration: none; font-size: 25px;" href="Muscle.html" >Home</a></li>
+        <li><a class="active" style="text-decoration: none; font-size: 25px;" href="MUSCLE2.html" >Trainer</a></li>
+        <li><a style="text-decoration: none; font-size: 25px;" href="MUSCLE ABOUTUS.html">About us</a></li>
+
+    </ul>
+</header>
+
+
+
+
+  <!--Important Constant that must be show
+  AngleOnRightElbow
+  State
+  Count
+  -->
+
+    <!--Important Constant that must be show
+  AngleOnRightElbow
+  State
+  Counter
+  -->
+
+  <!-- Down here is the really useful code-->
+  <!--ตัวแปรเก็บค่าต่างๆ-->
+  <div class="container">
+    <video class="input_video" width="0px" height="0px"></video>
+    <canvas class="output_canvas" width="1100px" height="600px"></canvas>
+    <div class="landmark-grid-container" ></div>
+    <div id="textOverlay" style="position: absolute; top: 200px; left: 40px; color: black; font-size: 30px;  font-family: 'Anta', sans-serif;">
+      <p id="overlayText"></p>
+      <button id="myButton" style="border-radius: 20px; font-size: 30px;  font-family: 'Anta', sans-serif;">Reset!</button>
+    </div>
+    
+  </div>
+
+
+  <script type="module">
+
+    //Container of vedioelement
+    const videoElement = document.getElementsByClassName('input_video')[0];
+
+    //container of canvas size element
+    const canvasElement = document.getElementsByClassName('output_canvas')[0];
+
+    //Container of canvas 2d Element
+    const canvasCtx = canvasElement.getContext('2d');
+
+    //Container of Landmark position
+    const landmarkContainer = document.getElementsByClassName('landmark-grid-container')[0];
+    
+    const grid = new LandmarkGrid(landmarkContainer);
+    
+    //Container that will count Exercise
+    let Counter=0;
+    let State="Higher";
+    let a=0
+    function updateOverlayText(text) {
+      // Update the content of the overlay text
+      document.getElementById('overlayText').innerText = text;
+    }
+
+    //Creat a new Command Module that can make a detection for Landmark and calculate them
+    function onResults(results) {
+      //Fix bug that detection page dissappear
+      if (!results.poseLandmarks) {
+        grid.updateLandmarks([]);
+        return;
+      }
+    
+
+      // AX=RightShoulderX
+      // AY=RightShoulderY
+      // BX=RightElbowX
+      // BY=RightWristY
+      // CX=RightWristX
+      // CY=RightWristY
+      let AX = results.poseLandmarks[12].x;
+      let AY = results.poseLandmarks[12].y;
+      let BX = results.poseLandmarks[14].x;
+      let BY = results.poseLandmarks[14].y;
+      let CX = results.poseLandmarks[16].x;
+      let CY = results.poseLandmarks[16].y;
+
+      //Make B to be your Origin point(0,0)
+      //Calculate Angle of wrist - Angle of Sholder
+      let RadiansRightElbow = Math.atan2((CY-BY),(CX-BX))-Math.atan2((AY-BY),(AX-BX));
+
+      //Change Radien to Degree Angle
+      let AngleOnRightElbow = RadiansRightElbow*180/(Math.PI);
+      AngleOnRightElbow=parseFloat(Math.abs(AngleOnRightElbow).toFixed(1));
+        
+      console.log(AngleOnRightElbow);
+
+      
+      //Count the times
+      if (AngleOnRightElbow<40 && State==="Higher") {
+        Counter = Counter+1
+        State="Lower"};
+
+      if (AngleOnRightElbow>160 && State==="Lower") {
+        State="Higher"};
+
+      console.log(State)
+      console.log(Counter);
+
+
+
+
+      
+      document.getElementById("myButton").addEventListener("click", function() {
+        Counter=0;
+        a=20
+      });
+      if (a>0) {
+        a=a-1
+        updateOverlayText(`Angle on Right Elbow: ${AngleOnRightElbow}
+                          Arm State: ${State}
+                          Counter: ${Counter}
+                          Counter reset to ZER0 !!`);
+      }
+      else {
+        updateOverlayText(`Angle on Right Elbow: ${AngleOnRightElbow}
+                          Arm State: ${State}
+                          Counter: ${Counter}`);
+      };
+
+      //Code down here creat a cool detection canva.
+      //Crat a New vedio canva that track only person
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      canvasCtx.drawImage(results.segmentationMask, 0, 0,
+                          canvasElement.width, canvasElement.height);
+    
+      // Restore body part picture.
+      canvasCtx.globalCompositeOperation = 'source-in';
+      canvasCtx.drawImage(
+          results.image, 0, 0, canvasElement.width, canvasElement.height);
+    
+      // Restore background picture
+      canvasCtx.globalCompositeOperation = 'destination-atop';
+      canvasCtx.drawImage( 
+          results.image, 0, 0, canvasElement.width, canvasElement.height);
+    
+      // Creat Landmarkdot and Line connect 2 landmarks
+      canvasCtx.globalCompositeOperation = 'source-over';
+      //draw a line connect 2 landmarks
+      //canvaCtx is to load photo of vedio
+      //results.poseLandmarks is to locate landmark location MAYBE???
+      //POSE_CONNECTIONS is for its name
+      drawConnectors(canvasCtx, results.poseLandmarks, POSE_CONNECTIONS,
+                     {color: '#FF0000', lineWidth: 4});
+      //draw a dot on landmark
+      drawLandmarks(canvasCtx, results.poseLandmarks,
+                    {color: '#001AFF', lineWidth: 2});
+      canvasCtx.restore();
+    
+      grid.updateLandmarks(results.poseWorldLandmarks);
+
+
+    }
+    //Creating a new Command Module End
+    
+
+    
+    //Allow to create detection canva
+    const pose = new Pose({locateFile: (file) => {
+      return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+;
+      
+    }});
+    pose.setOptions({
+      modelComplexity: 1,
+      smoothLandmarks: true,
+      enableSegmentation: true,
+      smoothSegmentation: true,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+    pose.onResults(onResults);
+    
+    //Order to creat canva show
+    const camera = new Camera(videoElement,{
+      onFrame: async () => {
+        await pose.send({image: videoElement});},
+      //Fix canva size
+      width: 1280,
+      height: 720
+    });
+
+    //Order camera to turn on
+    camera.start();
+
+
+  </script>
+<!--Important cod finish-->
+
+
+</body>
+</html>

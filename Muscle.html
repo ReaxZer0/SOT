@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+
+    header{
+        margin: 0;
+        padding:0;
+        box-sizing: border-box;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 30px 100px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10000;
+    }
+    header .logo{
+        display:flex;
+        color: #fff;
+        font-weight: 700;
+        text-decoration: none;
+        font-size: 2em;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+    header ul{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    header ul li{
+        list-style: none;
+        margin-left: 20px;
+    }
+    header ul li a{
+        text-decoration: noun;
+        padding: 6px 15px;
+        color: black;
+        border-radius: 20px;
+        font-family: 'Anta', sans-serif; 
+    }
+    header ul li a:hover,header ul li a.active{
+        background-color: black;
+        color: #fff;
+    }
+    body{
+        padding-top: 220px;
+        background-image: url(MUSPIC/104.png);
+        background-position: center;
+        background-size: cover;
+    }
+    text{
+        text-decoration: none;
+    }
+    #ss{
+        background-color: black;
+        width: 400px;
+        height: 200px;
+        margin: 0;
+        padding: 0;
+    }
+    #hh{
+        background-color: aliceblue;
+        
+        position: absolute;
+        width: 100px;
+        height: 200px;
+
+    }
+    #vid{
+        background-position: center;
+        
+    }
+
+    p::after{
+        content: '';
+        width: 3px;
+        height: 40px;
+        display: block;
+        background-color: #fff;
+        position: absolute;
+        left: -6px;
+        top: 5px;
+        margin-right: 20px;
+    }
+    .ww{
+        font-size: 40px;
+        font-family: 'Anta', sans-serif;
+        color: #fff;
+        margin-left: 100px; 
+        
+    }
+    .ver{
+        padding-left: 200px;
+        width: 33px;
+        height: 200px;
+        color: #fff;
+    }
+
+    #my-text {
+    font-size: 40px;
+    text-transform: uppercase;
+    position: relative;
+    display: inline
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+    
+    
+    }
+
+    .line {
+    transform: translateY(1000px);
+    transition: transform .5s;
+    }
+    
+
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOT</title>
+    <link rel="icon" href="MUSPIC/SOTT.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anta&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <a href="#" class="logo"><img src="MUSPIC/SOT_kuro-removebg.png" width="30%" height="30%"></a>
+        <ul>
+            <li><a class="active" style="text-decoration: none; font-size: 25px;" href="Muscle.html" >Home</a></li>
+            <li><a style="text-decoration: none; font-size: 25px;" href="MUSCLE2.html" target="_blank">Trainer</a></li>
+            <li><a style="text-decoration: none; font-size: 25px;" href="MUSCLE ABOUTUS.html">About us</a></li>
+
+        </ul>
+    </header>
+    
+  
+    <a id="ver"></a>
+   
+    <p id="my-text" style="font-family: 'Anta', sans-serif;  color: #fff;
+    margin-left: 100px;    clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);">SOT : Simple online trainer
+        <br>Friendly to gym newcomer
+        <br>Let us take part on your
+        <br>fitness journey.</p>
+        <br>
+    <a class="ww" href="MUSCLE2.html"><button  style="border-radius: 10px; color: #fff; background-color: black;
+     font-size: 30px; font-family:'Anta', sans-serif ; margin-top: 20px;" >Let's get swole</button></a>
+    
+
+    <script src="https://unpkg.com/split-type"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const myText = new SplitType('#my-text')
+    
+    gsap.to('.line', {  
+        y: 0,
+        stagger: 0.05,
+        delay: 0.2,
+        duration: .2
+    })
+        </script>
+    <br>
+    <br>
+    <br>
+    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
+
+
+</body>
+</html>
