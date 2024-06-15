@@ -71,13 +71,67 @@
     }
     #vid{
         background-position: center;
-        
+        position: relative;
     }
-canvas{
+.container{
   padding-top: 0px;
   padding-left: 300px;
+
   
 }
+
+  .bar{
+    left: 5%;
+    position: absolute;
+    background-color: aliceblue;
+    top: 50%;
+    width: 50px;
+    height: 300px;
+  }
+  .litbar{
+    background-color: black;
+    height: 0%;
+    width: 50px;
+  }
+  .per{
+    color: red;
+    font-size: 16;
+    left: 13px;
+    top: 70px;
+
+  }
+  .viewer-widget-js{
+    width: 0px;
+    height: 0px;
+    font-size: 0;
+  }
+  .controls{
+    width: 0px;
+    height: 0px;
+  }
+  .bar1{
+    right: 5%;
+
+    position: absolute;
+    background-color: aliceblue;
+    top: 50%;
+    width: 50px;
+    height: 300px;
+  }
+  .litbar1{
+    background-color: black;
+    height: 0%;
+    width: 50px;
+  }
+  .per1{
+    color:rgb(237, 47, 14);
+    font-size: 16;
+    left: 13px;
+    top: 70px;
+
+  }
+
+
 
 
 </style>
@@ -111,6 +165,7 @@ canvas{
         <li><a style="text-decoration: none; font-size: 25px;" href="MUSCLE ABOUTUS.html">About us</a></li>
 
     </ul>
+    
 </header>
 
 
@@ -130,16 +185,50 @@ canvas{
 
   <!-- Down here is the really useful code-->
   <!--ตัวแปรเก็บค่าต่างๆ-->
-  <div class="container">
-    <video class="input_video" width="0px" height="0px"></video>
-    <canvas class="output_canvas" width="1100px" height="600px"></canvas>
-    <div class="landmark-grid-container" ></div>
-    <div id="textOverlay" style="position: absolute; top: 200px; left: 40px; color: black; font-size: 30px;  font-family: 'Anta', sans-serif;">
-      <p id="overlayText"></p>
-      <button id="myButton" style="border-radius: 20px; font-size: 30px;  font-family: 'Anta', sans-serif;">Reset!</button>
-    </div>
+  <main>
+    <!--progress bar-->
+    <div class="bar">
+      <div id="yae" class="litbar"></div>
     
+    <div id="percent" class="per"></div></div>
+
+    <div class="bar1">
+      <div id="yae1" class="litbar1"></div>
+    
+    <div id="percent1" class="per1"></div></div>
+  <div class="container">
+
+    <!--camera-->
+    <video class="input_video" width="0px" height="0px"></video>
+    <canvas class="output_canvas" width="1100px" height="600px" left="100px"></canvas>
   </div>
+
+
+
+
+    <!--button-->
+    <div class="landmark-grid-container" ></div>
+
+
+    <!--ตัวแสดงค่า ซ้าน ขวา-->
+    <div id="textOverlay" style="position: absolute; top: 170px; left: 40px; color: black; font-size: 30px;  font-family: 'Anta', sans-serif;">
+      <p id="overlayText"></p>
+      <button id="myButton" style="border-radius: 20px; font-size: 30px;  font-family: 'Anta', sans-serif;  ">Reset!</button>
+    </div>
+
+    <div id="textOverlay1" style="position: absolute; top: 170px; right: 4%; color: white; font-size: 30px;  font-family: 'Anta', sans-serif;">
+      <p id="overlayText1"></p>
+      <button id="myButton1" style="border-radius: 20px; font-size: 30px;  font-family: 'Anta', sans-serif; ">Reset!</button>
+      </div>
+    <button id="butto" class="came" style="border-radius: 20px; font-size: 30px;  font-family: 'Anta', sans-serif; background-color: aliceblue; position: absolute; top: 750px;">opencamera</button>
+    <br>
+    <button id="closeaa" class="came" style="border-radius: 20px; font-size: 30px;  font-family: 'Anta', sans-serif; background-color: aliceblue; position: absolute; top:800px">closecamera</button>
+    <audio id="soundEffect" src="rightht.mp3" preload="auto"></audio>
+    <audio id="soundEffect1" src="leftft.mp3" preload="auto"></audio>
+
+  
+  
+  </main>
 
 
   <script type="module">
@@ -159,12 +248,23 @@ canvas{
     const grid = new LandmarkGrid(landmarkContainer);
     
     //Container that will count Exercise
-    let Counter=0;
-    let State="Higher";
+    let RCounter=0;
+    let RState="Higher";
+    let b=0
+
+    let LCounter=0;
+    let LState="Higher";
     let a=0
+
+    
     function updateOverlayText(text) {
       // Update the content of the overlay text
       document.getElementById('overlayText').innerText = text;
+    }
+
+    function updateOverlayText1(text1) {
+      // Update the content of the overlay text
+      document.getElementById('overlayText1').innerText = text1;
     }
 
     //Creat a new Command Module that can make a detection for Landmark and calculate them
@@ -175,7 +275,7 @@ canvas{
         return;
       }
     
-
+      let Fixbug=0
       // AX=RightShoulderX
       // AY=RightShoulderY
       // BX=RightElbowX
@@ -189,48 +289,110 @@ canvas{
       let CX = results.poseLandmarks[16].x;
       let CY = results.poseLandmarks[16].y;
 
+
+      let DX = results.poseLandmarks[11].x;
+      let DY = results.poseLandmarks[11].y;
+      let EX = results.poseLandmarks[13].x;
+      let EY = results.poseLandmarks[13].y;
+      let FX = results.poseLandmarks[15].x;
+      let FY = results.poseLandmarks[15].y;
+
+
       //Make B to be your Origin point(0,0)
       //Calculate Angle of wrist - Angle of Sholder
       let RadiansRightElbow = Math.atan2((CY-BY),(CX-BX))-Math.atan2((AY-BY),(AX-BX));
 
+      let RadiansLeftElbow = Math.atan2((FY-EY),(FX-EX))-Math.atan2((DY-EY),(DX-EX));
+
       //Change Radien to Degree Angle
       let AngleOnRightElbow = RadiansRightElbow*180/(Math.PI);
-      AngleOnRightElbow=parseFloat(Math.abs(AngleOnRightElbow).toFixed(1));
+      AngleOnRightElbow=parseFloat(Math.abs(AngleOnRightElbow).toFixed(0));
+
+      let AngleOnLeftElbow = RadiansLeftElbow*180/(Math.PI);
+      AngleOnLeftElbow=parseFloat(Math.abs(AngleOnLeftElbow).toFixed(0));
+
+
+      if (AngleOnRightElbow>180) {
+        AngleOnRightElbow=180-(AngleOnRightElbow-180)
+      };
+      if (AngleOnLeftElbow>180) {
+        AngleOnLeftElbow=180-(AngleOnLeftElbow-180)
+      };
         
       console.log(AngleOnRightElbow);
 
-      
+      const soundEffect = document.getElementById('soundEffect');
+      const soundEffect1 = document.getElementById('soundEffect1');
+
       //Count the times
-      if (AngleOnRightElbow<40 && State==="Higher") {
-        Counter = Counter+1
-        State="Lower"};
+      if (AngleOnRightElbow<40 && RState==="Higher") {
+        RCounter = RCounter+1
+        RState="Lower"
+        soundEffect.play();
+      };
 
-      if (AngleOnRightElbow>160 && State==="Lower") {
-        State="Higher"};
+      if (AngleOnRightElbow>160 && RState==="Lower") {
+        RState="Higher"};
 
-      console.log(State)
-      console.log(Counter);
+      //Left Arm
+      if (AngleOnLeftElbow<40 && LState==="Higher") {
+        LCounter = LCounter+1
+        LState="Lower"
+        soundEffect1.play()
+      };
+
+      if (AngleOnLeftElbow>160 && LState==="Lower") {
+        LState="Higher"};
+        ;
 
 
+      console.log(RState)
+      console.log(RCounter);
+      const x = (AngleOnRightElbow/180)*100
+      console.log(x);
+      document.getElementById('yae').style.height = x + '%' ;
+      document.getElementById('percent').innerHTML = Math.abs(x.toFixed(0)-100) +'%';
+      const x1 = (AngleOnLeftElbow/180)*100
+      document.getElementById('yae1').style.height = x1 + '%' ;
+      document.getElementById('percent1').innerHTML = Math.abs(x1.toFixed(0)-100) +'%';
 
 
       
       document.getElementById("myButton").addEventListener("click", function() {
-        Counter=0;
-        a=20
+        RCounter=0;
+        b=20
       });
-      if (a>0) {
-        a=a-1
+      if (b>0) {
+        b=b-1
         updateOverlayText(`Angle on Right Elbow: ${AngleOnRightElbow}
-                          Arm State: ${State}
-                          Counter: ${Counter}
+                          Right Arm State: ${RState}
+                          Right Arm Counter: ${RCounter}
                           Counter reset to ZER0 !!`);
       }
       else {
         updateOverlayText(`Angle on Right Elbow: ${AngleOnRightElbow}
-                          Arm State: ${State}
-                          Counter: ${Counter}`);
+                          Right Arm State: ${RState}
+                          Right Arm Counter: ${RCounter}
+                          `);
       };
+
+      document.getElementById("myButton1").addEventListener("click", function() {
+        LCounter=0;
+        a=20
+      });
+      if (a>0) {
+        a=a-1
+        updateOverlayText1(`Angle on Left Elbow: ${AngleOnLeftElbow}
+                          Left Arm State: ${LState}
+                          Left Arm Counter: ${LCounter}
+                          Counter reset to ZER0 !!`);
+      }
+      else {
+        updateOverlayText1(`Angle on Left Elbow: ${AngleOnLeftElbow}
+                          Left Arm State: ${LState}
+                          Left Arm Counter: ${LCounter}`);
+      };
+
 
       //Code down here creat a cool detection canva.
       //Crat a New vedio canva that track only person
@@ -288,18 +450,41 @@ canvas{
     
     //Order to creat canva show
     const camera = new Camera(videoElement,{
-      onFrame: async () => {
-        await pose.send({image: videoElement});},
-      //Fix canva size
-      width: 1280,
-      height: 720
-    });
-
-    //Order camera to turn on
-    camera.start();
+        onFrame: async () => {
+          await pose.send({image: videoElement});},
+        //Fix canva size
+        width: 1000,
+        height: 500
+      });
 
 
+
+      //Order camera to turn 
+      
+    const oper = document.getElementById('butto')
+      oper.addEventListener('click',()=>{
+        camera.start();
+    
+      }
+    )
+    const closecamera = document.getElementById('closeaa')
+      closecamera.addEventListener('click',()=>{
+        camera.stop();
+
+ 
+       
+      }
+    )
+
+
+    
+
+    
+  
+  
   </script>
+
+
 <!--Important cod finish-->
 
 
